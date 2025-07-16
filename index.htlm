@@ -35,6 +35,41 @@
         html {
             scroll-behavior: smooth;
         }
+        /* Modal styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgba(0,0,0,0.7); /* Black w/ opacity */
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #1a202c;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
@@ -63,7 +98,7 @@
                 <!-- Updated Contact Link to scroll to section -->
                 <a href="#contact-section" class="text-gray-300 hover:text-cargojet-orange transition duration-300 font-medium">Contact</a>
                 <!-- Sign In Link -->
-                <a href="#" class="text-white bg-cargojet-orange px-4 py-2 rounded-full hover-cargojet-orange transition duration-300 font-medium">Sign In</a>
+                <a href="#" id="signInButton" class="text-white bg-cargojet-orange px-4 py-2 rounded-full hover-cargojet-orange transition duration-300 font-medium cursor-pointer">Sign In</a>
             </nav>
             <!-- Mobile Menu Button (Hamburger) -->
             <button class="md:hidden text-gray-300 focus:outline-none">
@@ -101,7 +136,7 @@
                     <p class="text-gray-400">Master the essential paperwork for dangerous goods shipments.</p>
                 </div>
             </div>
-            <button class="mt-8 px-8 py-3 bg-cargojet-orange text-white font-bold rounded-full shadow-lg hover-cargojet-orange transition duration-300 focus:outline-none focus:ring-2 focus:ring-cargojet-orange focus:ring-opacity-75">
+            <button id="startTrainingButton" class="mt-8 px-8 py-3 bg-cargojet-orange text-white font-bold rounded-full shadow-lg hover-cargojet-orange transition duration-300 focus:outline-none focus:ring-2 focus:ring-cargojet-orange focus:ring-opacity-75 cursor-pointer">
                 Start Training
             </button>
         </section>
@@ -145,6 +180,31 @@
             <p class="mt-2 text-sm">Designed for a seamless user experience.</p>
         </div>
     </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2 class="text-2xl font-bold text-cargojet-orange mb-4">Sign In</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="username" class="block text-gray-300 text-sm font-medium mb-2">Username</label>
+                    <input type="text" id="username" name="username" required
+                           class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-cargojet-orange">
+                </div>
+                <div>
+                    <label for="password" class="block text-gray-300 text-sm font-medium mb-2">Password</label>
+                    <input type="password" id="password" name="password" required
+                           class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-cargojet-orange">
+                </div>
+                <button type="submit"
+                        class="w-full px-4 py-2 bg-cargojet-orange text-white font-bold rounded-full shadow-lg hover-cargojet-orange transition duration-300 focus:outline-none focus:ring-2 focus:ring-cargojet-orange focus:ring-opacity-75">
+                    Login
+                </button>
+            </form>
+            <div id="loginMessageBox" class="hidden mt-4 p-2 rounded-md text-center text-sm" role="alert"></div>
+        </div>
+    </div>
 
     <script>
         document.getElementById('contactForm').addEventListener('submit', function(event) {
@@ -195,6 +255,70 @@
             messageBox.style.color = '#065f46'; /* Dark green text */
             document.getElementById('contactForm').reset(); // Clear the form
         });
+
+        // Get the modal
+        var modal = document.getElementById("loginModal");
+
+        // Get the buttons that open the modal
+        var signInBtn = document.getElementById("signInButton");
+        var startTrainingBtn = document.getElementById("startTrainingButton");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close-button")[0];
+
+        // Function to open the modal
+        function openModal() {
+            modal.style.display = "flex"; // Use flexbox for centering
+        }
+
+        // Function to close the modal
+        function closeModal() {
+            modal.style.display = "none";
+            document.getElementById('loginForm').reset(); // Clear the login form
+            document.getElementById('loginMessageBox').classList.add('hidden'); // Hide any previous messages
+        }
+
+        // When the user clicks the button, open the modal
+        signInBtn.onclick = openModal;
+        startTrainingBtn.onclick = openModal;
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = closeModal;
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        // Handle the login form submission
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const loginMessageBox = document.getElementById('loginMessageBox');
+
+            // --- Placeholder for client-side only login logic ---
+            // In a real application, you would send the username and password
+            // to a backend for authentication and authorization.
+            console.log('Login Attempt:');
+            console.log('Username:', username);
+            console.log('Password:', password);
+
+            // Basic validation and placeholder success/failure message
+            if (username === 'testuser' && password === 'password123') {
+                loginMessageBox.textContent = 'Login successful!';
+                loginMessageBox.className = 'mt-4 p-2 rounded-md text-green-700 bg-green-100 block';
+                // In a real app, redirect to a dashboard or training page
+                // window.location.href = '/training-dashboard';
+            } else {
+                loginMessageBox.textContent = 'Invalid username or password.';
+                loginMessageBox.className = 'mt-4 p-2 rounded-md text-red-700 bg-red-100 block';
+            }
+        });
+
     </script>
 
 </body>
